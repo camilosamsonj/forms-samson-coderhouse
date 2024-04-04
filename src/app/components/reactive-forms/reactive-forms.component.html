@@ -1,0 +1,79 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Angular Reactive Forms</h5>
+              <form [formGroup]="myForm" class="row g-3">
+            
+                <div class="col-md-6">
+                  <label 
+                  for="inputName" 
+                  class="form-label">Name
+                </label>
+                  <input 
+                  formControlName="name" 
+                  type="text" 
+                  class="form-control" 
+                  id="name" />
+                  <div 
+                  *ngIf="myForm.get('name')?.touched" 
+                  class="invalid-feedback">
+                      <div *ngIf="myForm.get('name')?.errors?.['required']">Debe ingresar un nombre.</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label 
+                  for="inputLastName" 
+                  class="form-label">Last Name</label>
+                  <input 
+                  formControlName="lastName" 
+                  type="text" 
+                  class="form-control" id="lastName" />
+                </div>
+                
+                <div class="col-md-12">
+                  <label for="inputEmail4" class="form-label">Email</label>
+                  <input formControlName="email"
+                    
+                    type="email" 
+                    class="form-control"
+                    [ngClass]="emailControl?.valid ? 'is-valid' : 'is-invalid' "
+                    id="inputEmail4" />
+                </div>
+                <div class="col-md-12">
+                  <label 
+                  for="inputPassword4" 
+                  class="form-label">Password</label>
+                  <input 
+                  formControlName="password" 
+                  type="password" 
+                  class="form-control"
+                  [ngClass]="passwordControl?.valid ? 'is-valid' : 'is-invalid' "
+                  id="inputPassword4" />
+                  <div 
+                  *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched" 
+                  class="invalid-feedback">
+                    <div *ngIf="myForm.get('password')?.errors?.['required']">La contraseña es requerida.</div>
+                    <div *ngIf="myForm.get('password')?.errors?.['minlength']">La contraseña  debe tener como mínimo 5 caracteres.</div>
+                  </div>
+                </div>
+                
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+              </form>
+            
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+         <pre>
+            {{ myForm.value | json }}
+         </pre> 
+        </div>
+      </div>
+</div>
+
+
