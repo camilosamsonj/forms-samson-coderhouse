@@ -1,79 +1,171 @@
-
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Angular Reactive Forms</h5>
-              <form [formGroup]="myForm" class="row g-3">
-            
-                <div class="col-md-6">
-                  <label 
-                  for="inputName" 
-                  class="form-label">Name
-                </label>
-                  <input 
-                  formControlName="name" 
-                  type="text" 
-                  class="form-control" 
-                  id="name" />
-                  <div 
-                  *ngIf="myForm.get('name')?.touched" 
-                  class="invalid-feedback">
-                      <div *ngIf="myForm.get('name')?.errors?.['required']">Debe ingresar un nombre.</div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label 
-                  for="inputLastName" 
-                  class="form-label">Last Name</label>
-                  <input 
-                  formControlName="lastName" 
-                  type="text" 
-                  class="form-control" id="lastName" />
-                </div>
-                
-                <div class="col-md-12">
-                  <label for="inputEmail4" class="form-label">Email</label>
-                  <input formControlName="email"
-                    
-                    type="email" 
-                    class="form-control"
-                    [ngClass]="emailControl?.valid ? 'is-valid' : 'is-invalid' "
-                    id="inputEmail4" />
-                </div>
-                <div class="col-md-12">
-                  <label 
-                  for="inputPassword4" 
-                  class="form-label">Password</label>
-                  <input 
-                  formControlName="password" 
-                  type="password" 
-                  class="form-control"
-                  [ngClass]="passwordControl?.valid ? 'is-valid' : 'is-invalid' "
-                  id="inputPassword4" />
-                  <div 
-                  *ngIf="myForm.get('password')?.invalid && myForm.get('password')?.touched" 
-                  class="invalid-feedback">
-                    <div *ngIf="myForm.get('password')?.errors?.['required']">La contraseña es requerida.</div>
-                    <div *ngIf="myForm.get('password')?.errors?.['minlength']">La contraseña  debe tener como mínimo 5 caracteres.</div>
-                  </div>
-                </div>
-                
-                <div class="col-12">
-                  <button type="submit" class="btn btn-primary">Enviar</button>
-                </div>
-              </form>
-            
+<div id="primary-container"
+  class="d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+          <h5 class="card-title justify-text-center">Angular Reactive Forms</h5>
+          <br>
+          
+        <form [formGroup]="myFormGroup" (ngSubmit)="onSubmit()" class="row g-3">
+          <div class="col-md-6">
+            <label for="inputName" class="form-label">Nombre </label>
+            <input
+              [ngClass]="applyValidationStyleClass('name')"
+              formControlName="name"
+              type="text"
+              class="form-control"
+              placeholder="Nombre"
+              id="name"
+            />
+            <div class="invalid-feedback">
+              {{ 
+                getErrors('name')?.
+              ['required'] && 
+              'Debe ingresar un nombre'  
+            }}
+              {{
+                getErrors('name')?.
+                ['minlength'] && 
+                'El nombre debe tener al menos 3 caracteres'  
+              }}
             </div>
           </div>
-        </div>
-        <div class="col-6">
-         <pre>
-            {{ myForm.value | json }}
-         </pre> 
-        </div>
+
+          <div class="col-md-6">
+            <label for="inputLastName" class="form-label">Apellido</label>
+            <input
+              [ngClass]="applyValidationStyleClass('lastName')"
+              formControlName="lastName"
+              type="text"
+              class="form-control"
+              placeholder="Apellido"
+              id="lastName"
+            />
+            <div class="invalid-feedback">
+              {{ getErrors('lastName')?.
+              ['required'] && 'Debe ingresar un apellido'  
+            }}
+              {{ getErrors('lastName')?.
+              ['minlength'] && 
+              'El apellido debe tener al menos 3 caracteres'  
+            }}
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <input
+              [ngClass]="applyValidationStyleClass('email')"
+              formControlName="email"
+              type="email"
+              class="form-control"
+              placeholder="Correo electrónico"
+              id="inputEmail4"
+            />
+            <div class="invalid-feedback">
+              {{ getErrors('email')?.
+              ['required'] && 
+              'Debe ingresar una dirección de correo electrónico' 
+            }}
+              {{ getErrors('email')?.
+              ['email'] && 
+              'En el campo debe ingresar una dirección de email válida' 
+            }}
+            </div>
+          </div>
+          <div class="col-md-12">
+            <label for="inputPassword4" class="form-label">Password</label>
+            <input
+              [ngClass]="applyValidationStyleClass('password')"
+              formControlName="password"
+              type="password"
+              class="form-control"
+              placeholder="Contraseña"
+              id="inputPassword4"
+            />
+            <div class="invalid-feedback">
+              {{ getErrors('password')?.
+              ['required'] && 
+              'El campo "contraseña" es obligatorio' 
+            }}
+              {{ getErrors('password')?.
+              ['minlength'] && 
+              'La contraseña debe tener un mínimo de 8 caracteres.'
+            }}
+              <br />
+              {{ getErrors('password')?.
+              ['pattern'] && 
+              'La contraseña debe contener al menos una letra mayúscula y un símbolo'
+            }}
+            </div>
+          </div>
+          <div class="col-12">
+           
+            <div class="">
+              <ng-container 
+            *ngIf="myFormGroup.valid">
+             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Validar Formulario
+            </button>
+            </ng-container>
+            <ng-container 
+            *ngIf="myFormGroup.invalid">
+             <button type="button" class="btn btn-primary disabled" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Validar Formulario
+            </button>
+            </ng-container>
+            </div>
+            
+
+            <div class="modal fade" 
+            id="staticBackdrop" 
+            data-bs-backdrop="static" 
+            data-bs-keyboard="false" 
+            tabindex="-1" 
+            aria-labelledby="staticBackdropLabel" 
+            aria-hidden="true" 
+            (shown.bs.modal)="modalAbierto = true" 
+            (hidden.bs.modal)="modalAbierto = false">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" 
+                    id="staticBackdropLabel">
+                    Confirmación de envío de datos
+                  </h1>
+                    <button 
+                    type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="modal" 
+                    aria-label="Close"></button>
+                  </div>
+                  <div 
+                  class="modal-body">
+                    ¿Está seguro de enviar los datos?
+                  </div>
+                  <div 
+                  class="modal-footer">
+                    <button 
+                    type="button" 
+                    class="btn btn-secondary" 
+                    data-bs-dismiss="modal">Cancelar</button>
+                    <button 
+                    type="submit" 
+                    class="btn btn-primary">Enviar Formulario</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
+    </div>
+  </div>
 </div>
+
+
+
 
 
